@@ -37,10 +37,8 @@ void main(){
     // print(num!);
     throw Exception('Unknown1 Error'); //Exception: Unknown1 Error
 
-  }on UnsupportedError catch(e,s){
-    print('~/ 해당 연산자는 0으로 나눌 수 없습니다.');
-  }on TypeError catch (e,s){
-    print('Null 값이 참조되었습니다.');
+  }on Exception catch(e,s){
+    print('Exception 에러 잡기');
   }catch (e,s){
     rethrow;
     print('모르는 에러가 발생했습니다.');
