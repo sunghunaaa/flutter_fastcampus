@@ -1,78 +1,104 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(
     MaterialApp(
       home: Scaffold(
-        body: Body(),
+        body: Badge(),
       ),
     ),
   );
 }
 
-///Flexible flex 속성으로 비율 조절도 가능함.
-///Container 와 Flexible 같이 사용 시 container가 차지한 영역 나머지 부분을 flexible이 차지하게 됨 ,, 이때 Flexible 대신 Expanded 사용해도 됨
-///Flexible과 Expanded 차이는 Column이나 Row 내부에서 차이가 조금 있음 height와 같은 강제로 길이를 정했을 경우 Flexible은 적용됨, Expanded는 적용 안 됨, -> constraint의 차이가 조금 있음
-///SingleChildScrollView 위젯 내에 flex와 관련된 객체를 넣으면 에러를 발생시킴. 당연한 것임. Flexible에 높이를 줘도 에러가 됨.
-///Column 내부에 flex 관련 객체 속에 싱글 스크롤 뷰를 넣어 사용은 가능. 당연한 것
+class Badge extends StatelessWidget {
+  const Badge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: 300,
+          height: 300,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(150),
+          ),
+        ),
+        Positioned(
+          left: 10,
+          top: 10,
+          child: Container(
+            width: 280,
+            height: 280,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(140),
+            ),
+          ),
+        ),
+        Container(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: Text(
+              'Count 0',
+              style: TextStyle(color: Colors.red, fontSize: 32),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+///Container 겹치기 Stack
+///Stack 내에서 늦게 선언될수록 위에 나오게 됨
+///Stack 내에 '특정' 위치를 잡고 싶을 때 Positioned 사용하면 됨
+///Stack 내에서 수치로 정확하게 떨어지지 않고 예를들어 중간에 이런 경우에는 Align 위젯 사용하면 됨 cf) x,y를 찍어서 좌표에 퍼센트에 따라 위치시킬 수도 있음
+
 class Body extends StatelessWidget {
   const Body({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        // Flexible(flex:1 , child: Container(color:Colors.red)),
-        // Flexible(flex:2, child: Container(color:Colors.blue)),
-        // Flexible(flex:3 , child: Container(color:Colors.green)),
-        // Flexible(flex:4, child: Container(color:Colors.yellow)),
         Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 8),
+          color: Colors.black,
+          width: 500,
+          height: 500,
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-                Container(width: 50, height:50,color: Colors.blue, margin: EdgeInsets.symmetric(vertical: 8),),
-
-              ],
-            ),
+        Container(
+          color: Colors.red,
+          width: 400,
+          height: 400,
+        ),
+        Container(
+          color: Colors.blue,
+          width: 300,
+          height: 300,
+        ),
+        // Positioned(
+        //   top: 20,
+        //   left: 110,
+        //   child: Container(
+        //     color: Colors.green,
+        //     width: 200,
+        //     height: 200,
+        //   ),
+        // ),
+        Align(
+          // alignment: Alignment.topRight,
+          alignment: Alignment(0.2, 0),
+          child: Container(
+            width: 200,
+            height: 200,
+            color: Colors.green,
           ),
-        ),
-
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 8),
-        ),
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 8),
-        ),
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 8),
-        ),
-        Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 8),
         ),
       ],
     );
