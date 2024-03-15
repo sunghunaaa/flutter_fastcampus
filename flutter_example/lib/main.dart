@@ -50,6 +50,17 @@ class Badge extends StatelessWidget {
             ),
           ),
         ),
+        Container(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: Text(
+              'Count 0',
+              style: TextStyle(color: Colors.red, fontSize: 32),
+            ),
+          ),
+
+        ),
       ],
     );
   }
