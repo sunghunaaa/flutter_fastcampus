@@ -56,7 +56,7 @@ class Badge extends StatelessWidget {
           child: Center(
             child: Text(
               'Count 0',
-              style: TextStyle(color: Colors.red, fontSize: 32),
+              style: TextStyle(color: Colors.blue, fontSize: 32),
             ),
           ),
 
