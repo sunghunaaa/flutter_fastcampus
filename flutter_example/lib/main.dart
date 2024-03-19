@@ -1,166 +1,109 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(
     MaterialApp(
       home: Scaffold(
-        body: HomeWidget(),
+        body: Body(),
       ),
     ),
   );
 }
 
-class HomeWidget extends StatelessWidget {
-  const HomeWidget({super.key});
+class Body extends StatelessWidget {
+  const Body({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ConstraintsWidget(),
+    return Column(
+      children: [
+        ExampleStateless(),
+        ExampleStateful(paramIndex : 3),
+      ],
+    );
+  }
+}
+
+class ExampleStateless extends StatelessWidget {
+  const ExampleStateless({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        color: Colors.red,
       ),
     );
   }
 }
 
-///Constraint : 한글로 제약 조건. 부모의 제약 조건을 따른다.
-///Constraint 사용 후 Container > Container 구조를 만든 후 자식으로 width 값 또는 height 값을 조절할 경우 제약 조건(어디에 위치하는지 미정)에 의해 조절이 불가능함.
-///따라서 Contrainer > Center > Container 구조를 만들었을 경우 파란색 박스 안에 빨간색 박스를 만들 수 있다. 즉, 정확한 위치를 지정해주어야 함. ex) Align도 사용가능
-// class ConstraintsWidget extends StatelessWidget {
-//
-//   ConstraintsWidget({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.blue,
-//       height: 500,
-//       width: 500,
-//       child: Align(
-//         alignment: Alignment.topRight,
-//         child: Container(
-//           color: Colors.red,
-//           height: 300,
-//           width: 300,
-//         ),
-//       ),
-//     );
-//   }
-// }
+class ExampleStateful extends StatefulWidget {
+  final int paramIndex;
+  const ExampleStateful({required this.paramIndex,super.key});
 
-///Constraint의 예외 사항
-///SingleChildScrollview
-// class ConstraintsWidget extends StatelessWidget {
-//
-//   ConstraintsWidget({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.blue,
-//       height: 500,
-//       width: 500,
-//       child: SingleChildScrollView(
-//         child: Container(
-//           color: Colors.red,
-//           height: 300,
-//           width: 300,
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<ExampleStateful> createState() => _ExampleStatefulState();
+}
 
-///제약 조건을 추가로 줄 경우
-///BoxConstraints 같은 경우엔 부모의 제약 조건을 따르는 것이 아닌 자식의 제약 조건을 따르게 된다.
-// class ConstraintsWidget extends StatelessWidget {
-//   ConstraintsWidget({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.blue,
-//       height: 500,
-//       width: 500,
-//       child: Center(
-//         child: Container(
-//           constraints: BoxConstraints.loose(Size(200,200)),
-//           // BoxConstraints(
-//           //   minHeight:200,
-//           //   maxWidth: 250,
-//           //   maxHeight: 250,
-//           //   minWidth: 200,
-//           // ),
-//           color: Colors.red,
-//           // height: 300,
-//           // width: 300,
-//           // padding: EdgeInsets.all(8), // 빨간색 보여주고 싶다면
-//           child: Container(
-//             margin: EdgeInsets.all(20), // 빨간색 보여주고 싶다면
-//             width: 50,
-//             height: 50,
-//             color: Colors.green,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-///제약 조건을 따르지 않는 상황 UnconstrainedBox
-///UnconstrainedBox는 부모의 제약을 무시함.
-///릴리즈 모드에서는 경고 표시같은 거는 뜨지 않는다.
-///UnconstrainedBox대신 OverflowBox으로 할 경우 overflow되는 영역을 잡아줌.
-// class ConstraintsWidget extends StatelessWidget {
-//
-//   ConstraintsWidget({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.blue,
-//       height: 500,
-//       width: 500,
-//       child: Center(
-//         child: OverflowBox(
-//           child: Container(
-//             width:300,
-//             height: 700,
-//             color: Colors.green,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-///Text의 줄바꿈 constraint 처리하는 방법 (Expanded, Flexible을 사용한)
-class ConstraintsWidget extends StatelessWidget {
-  ConstraintsWidget({super.key});
+class _ExampleStatefulState extends State<ExampleStateful> {
+  ///모든 변수들은 StatefulState 상태객체 안에 넣어줘야 함.
+  /// setState 함수는 Widget에 상태가 바뀜을 알려주는 함수이다.(Widget rebuild)
+  late int index;
+  late int _index;
+  late TextEditingController textController;
+  ///late int 와 int? 차이는
+  ///late의 경우 나중에 무조건 값이 들어가야 함. 들어가지 않을 경우 에러 발생시킬 수 있음
+  ///?의 경우 나중에 값이 들어가지 않아도 됨.
+  int? sameIndex;
+
+  ///ctrl + o 누르면 자동 생성 가능
+  ///초기값 설정하는 방법
+  ///순서 중요 ! super.initState() 먼저 해줘야 함.
+  @override
+  void initState() {
+    super.initState(); //해당 함수를 사용해줘야 현재 위치의 widget의 상위 state도 initState가 됨
+    index = 5; //초기값 설정하는 방법
+
+    //(_변수 private 변수) _index 이런식으로 사용하는 것이 일반적임. widget.paramIndex 이렇게 다이렉트로 쓰는 것은 일반적이지 않음.
+    //stateful에서 변수 가져오는 방법.
+    _index = widget.paramIndex;
+
+    textController = TextEditingController();
+  }
+
+  ///dispose - Stream, 통신, ScrollController, TextController 사용시 사용의 끝을 알려줘야 리소스를 반납해야 함.
+  ///참고 - 변수 값은 것들은 자연스럽게 리소스 반납하고 사라짐.
+  ///순서 중요 ! super.initState() 나중에 해줘야 함.
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Flexible(
-          child: Container(
-            color: Colors.blue,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (index == 5) {
+              index = 0;
+              return;
+            }
+            index++;
+          });
+        },
+        child: Container(
+          color: Colors.blue.withOpacity(index/5),
+          child: Center(
             child: Text(
-              'Hello World!Hello World!Hello World!Hello World!Hello World!',
+              '${index}',
               style: TextStyle(fontSize: 30),
             ),
           ),
         ),
-        Flexible(
-          child: Container(
-            color: Colors.green,
-            child: Text(
-              'Hello World!',
-              style: TextStyle(fontSize: 30),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
