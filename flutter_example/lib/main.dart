@@ -32,7 +32,7 @@ class ExampleStateless extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        color: Colors.red,
+        color: Colors.red, 
       ),
     );
   }
