@@ -22,6 +22,7 @@ class Body extends StatelessWidget {
         TestRadioButton(),
         TestSlider(),
         TestSwitch(),
+        TestPopup(),
       ],
     );
   }
@@ -196,4 +197,43 @@ class _TestSwitchState extends State<TestSwitch> {
     );
   }
 }
- 
+
+///---------------------------Switch
+class TestPopup extends StatefulWidget {
+  const TestPopup({super.key});
+
+  @override
+  State<TestPopup> createState() => _TestPopupState();
+}
+
+enum TestValue {
+  test1,
+  test2,
+  test3;
+}
+
+class _TestPopupState extends State<TestPopup> {
+  TestValue selectValue = TestValue.test1;
+
+  /// builder 함수에는 항상 buildcontext가 들어간다.
+  ///
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(selectValue.name),
+        PopupMenuButton(
+          itemBuilder: (context) {
+            return TestValue.values
+                .map((value) =>
+                    PopupMenuItem(value: value, child: Text(value.name)))
+                .toList();
+          },
+          onSelected: (newValue) => setState(() {
+            selectValue = newValue;
+          }),
+        ),
+      ],
+    );
+  }
+}
