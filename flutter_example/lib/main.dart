@@ -1,239 +1,92 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(
-    MaterialApp(
+    const MaterialApp(
       home: Scaffold(
-        body: SafeArea(child: Body()),
+        body: SafeArea(child: body()),
       ),
     ),
   );
 }
 
-class Body extends StatelessWidget {
-  const Body({super.key});
+///콜백
+///
+class body extends StatelessWidget {
+  const body({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        TestCheckBox(),
-        TestRadioButton(),
-        TestSlider(),
-        TestSwitch(),
-        TestPopup(),
-      ],
-    );
+    return TestWidget();
   }
 }
 
-///---------------------------Check Box
-class TestCheckBox extends StatefulWidget {
-  const TestCheckBox({super.key});
+class TestWidget extends StatefulWidget {
+  const TestWidget({super.key});
 
   @override
-  State<TestCheckBox> createState() => _TestCheckBoxState();
+  State<TestWidget> createState() => _TestWidgetState();
 }
 
-class _TestCheckBoxState extends State<TestCheckBox> {
-  late List<bool> values;
-
-  @override
-  void initState() {
-    super.initState();
-    values = [false, false, false];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-            value: values[0],
-            onChanged: (value) => changeValue(0, value: value)),
-        Checkbox(
-            value: values[1],
-            onChanged: (value) => changeValue(1, value: value)),
-        Checkbox(
-            value: values[2],
-            onChanged: (value) => changeValue(2, value: value)),
-      ],
-    );
-  }
-
-  void changeValue(int index, {bool? value = false}) {
-    //{bool? value = false} named 파라미터로 지정하는 방법
-    setState(() {
-      values[index] = value!;
-    });
-  }
-}
-
-///---------------------------Radio button
-class TestRadioButton extends StatefulWidget {
-  const TestRadioButton({super.key});
-
-  @override
-  State<TestRadioButton> createState() => _TestRadioButtonState();
-}
-
-enum TestRadioValue {
-  test1,
-  test2,
-  test3;
-}
-
-class _TestRadioButtonState extends State<TestRadioButton> {
-  TestRadioValue? selectValue;
+class _TestWidgetState extends State<TestWidget> {
+  int value = 0;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ListTile(
-          leading: Radio<TestRadioValue>(
-            value: TestRadioValue.test1,
-            groupValue: selectValue,
-            onChanged: (value) =>
-                setState(() => selectValue = value!), // 화살표 함수로 변경가능
+        Text(
+          'Count : ${value}',
+          style: const TextStyle(fontSize: 30),
+        ),
+        // TestButton(addCounter),
+        TestButton(addCounterfn),
+      ],
+    );
+  }
+  //콜백으로 사용될 함수
+  /// 함수를 넘겨주는 것이라 TestButton(addCounter())가 아닌 TestButton(addCounter)임을 명심해야 함.
+  void addCounter(){
+    setState(() => ++value);
+  }
+  void addCounterfn(int addValue){
+    setState(() => value = addValue + value);
+  }
+}
+
+/// 버튼으로 만드는 방법 2가지 (GestureDetector, Inkwell)
+/// 탭, 더블 탭 등 이런 제스처 관련 다양한 속성들 많이 있으니 참고하면 좋다.
+/// Inkwell -> UI적 요소가 있음 (파형)
+
+class TestButton extends StatelessWidget {
+  const TestButton(this.callbackfn,{super.key});
+
+  // final VoidCallback callback;
+  final Function(int) callbackfn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      width: double.infinity,
+      child: GestureDetector(
+        onTap: ()=>callbackfn.call(1),
+        onDoubleTap: () => callbackfn.call(5),
+        onLongPress: () => callbackfn.call(10),
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: BoxDecoration(border: Border.all()),
+            child: Text(
+              'up counter',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
           ),
-          title: Text(TestRadioValue.test1.name),
-          onTap: () => setState(() {
-            if (selectValue != TestRadioValue.test1) {
-              selectValue = TestRadioValue.test1;
-            }
-          }),
         ),
-        Radio<TestRadioValue>(
-          value: TestRadioValue.test2,
-          groupValue: selectValue,
-          onChanged: (value) => setState(() {
-            selectValue = value!;
-          }),
-        ),
-        Radio<TestRadioValue>(
-          value: TestRadioValue.test3,
-          groupValue: selectValue,
-          onChanged: (value) => setState(() {
-            selectValue = value!;
-          }),
-        ),
-      ],
-    );
-  }
-}
-
-///---------------------------Slider
-class TestSlider extends StatefulWidget {
-  const TestSlider({super.key});
-
-  @override
-  State<TestSlider> createState() => _TestSliderState();
-}
-
-class _TestSliderState extends State<TestSlider> {
-  late double value;
-
-  @override
-  void initState() {
-    super.initState();
-    value = 0;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // value 는 double값을 넣어줘야하는데 나는 꼭 int를 넣고싶다. -> value : value as double 이렇게 사용하면 된다고 함. as에 대한 공부필요할듯
-    return Column(
-      children: [
-        Text('${value.round()}'),
-        Slider(
-          value: value,
-          onChanged: (newValue) => setState(() => value = newValue),
-          divisions: 100,
-          max: 100,
-          min: 0,
-          label: value.round().toString(),
-          activeColor: Colors.red,
-        ),
-      ],
-    );
-  }
-}
-
-///---------------------------Switch
-class TestSwitch extends StatefulWidget {
-  const TestSwitch({super.key});
-
-  @override
-  State<TestSwitch> createState() => _TestSwitchState();
-}
-
-class _TestSwitchState extends State<TestSwitch> {
-  late bool value1;
-  late bool value2;
-
-  @override
-  void initState() {
-    super.initState();
-    value1 = false;
-    value2 = false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Switch(
-          value: value1,
-          onChanged: (newValue) => setState(() => value1 = newValue),
-        ),
-        CupertinoSwitch(
-          value: value2,
-          onChanged: (newValue) => setState(() => value2 = newValue),
-          // CupertinoSwitch는 Theme에서 팁 변경도 가능하다고 함
-        ),
-      ],
-    );
-  }
-}
-
-///---------------------------Switch
-class TestPopup extends StatefulWidget {
-  const TestPopup({super.key});
-
-  @override
-  State<TestPopup> createState() => _TestPopupState();
-}
-
-enum TestValue {
-  test1,
-  test2,
-  test3;
-}
-
-class _TestPopupState extends State<TestPopup> {
-  TestValue selectValue = TestValue.test1;
-
-  /// builder 함수에는 항상 buildcontext가 들어간다.
-  ///
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(selectValue.name),
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return TestValue.values
-                .map((value) =>
-                    PopupMenuItem(value: value, child: Text(value.name)))
-                .toList();
-          },
-          onSelected: (newValue) => setState(() {
-            selectValue = newValue;
-          }),
-        ),
-      ],
+      ),
     );
   }
 }
