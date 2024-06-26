@@ -14,8 +14,10 @@ https://fastcampus.co.kr/
 
 ## shake_count_app
 > shake: ^2.2.0 사용
->> velocity_x: ^4.2.1 사용
->>> 프로젝트 초기 셋팅 정리
+> 
+> velocity_x: ^4.2.1 사용
+>
+> 프로젝트 초기 셋팅 정리
 
 ## part1
 > 현재 빈 flutter 프로젝트
