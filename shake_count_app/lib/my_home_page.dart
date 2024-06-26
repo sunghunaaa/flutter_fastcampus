@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
+import 'package:shake_count_app/red_box.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -107,28 +109,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              '흔들어서 카운트를 올려보세요',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+        child: Row(
+          children: [
+            const RedBox(),
+            Column(
+              // velocity_x를 이용해서 padding 코드 줄이기
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const RedBox(),
+                const Text(
+                  '흔들어서 카운트를 올려보세요',
+                ).pSymmetric(h:20,),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ],
             ),
           ],
         ),
@@ -141,3 +137,5 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     );
   }
 }
+
+
