@@ -21,10 +21,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 // class _MyHomePageState extends State<MyHomePage>{
   int _counter = 0;
   late ShakeDetector detector;
+
   @override
   void initState() {
     // app의 lifecycleState를 관찰하기 위해서는 WidgetsBinding 클래스가 필요하다
@@ -32,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     //with 대신 implements를 사용해도 된다. 사용할 경우 override해줘야하는 모든 함수를 구현해줘야하는 불편함이 있다.
     WidgetsBinding.instance.addObserver(this);
     ShakeDetector detector = ShakeDetector.autoStart(
-    // ShakeDetector.autoStart(
+      // ShakeDetector.autoStart(
       onPhoneShake: () {
         setState(() {
           _counter++;
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch(state){
+    switch (state) {
       case AppLifecycleState.resumed:
         detector.startListening();
         break;
@@ -69,13 +70,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     }
     super.didChangeAppLifecycleState(state);
   }
-
-
-
-
-
-
-
 
   void _incrementCounter() {
     setState(() {
@@ -117,9 +111,28 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const RedBox(),
-                const Text(
-                  '흔들어서 카운트를 올려보세요',
-                ).pSymmetric(h:20,),
+                const Text('흔들어서 카운트를 올려보세요.'),
+                '흔들어서 카운트를 올려보세요.'.text.make().pSymmetric(
+                      h: 20,
+                    ),
+                '흔들어서 카운트를 올려보세요.'
+                    .text
+                    .size(20)
+                    .color(Colors.red)
+                    .bold
+                    .white
+                    .black
+                    .isIntrinsic //크기에 반응하지않음.
+                    .makeCentered() // 중앙 정렬
+                    .box
+                    .color(Colors.green)
+                    .size(70, 70)
+                    .withRounded(value: 50)
+                    .width(170)
+                    .make()
+                    .pSymmetric(
+                      h: 20, v:50
+                    ),
                 Text(
                   '$_counter',
                   style: Theme.of(context).textTheme.headlineMedium,
@@ -137,5 +150,3 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     );
   }
 }
-
-
